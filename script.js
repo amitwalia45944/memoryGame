@@ -88,7 +88,7 @@ function check_for_match(previous_card, current_card) {
 
     matched_card_count += 1;
 
-    if (matched_card_count === 1) {
+    if (matched_card_count === 6) {
 
       win.style.display='block';
       restart_button.style.display = 'block';
