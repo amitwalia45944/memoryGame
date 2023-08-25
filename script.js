@@ -3,6 +3,7 @@ const start_button = document.getElementById("start-button");
 const restart_button = document.getElementById("restart-button");
 const score_display = document.getElementById("score-display");
 const moves = document.getElementById('moves');
+const win = document.querySelector('#win');
 
 let previous_card = '';
 let matched_card_count = 0;
@@ -87,10 +88,10 @@ function check_for_match(previous_card, current_card) {
 
     matched_card_count += 1;
 
-    if (matched_card_count === 6) {
+    if (matched_card_count === 1) {
 
-      start_button.style.display = "block";
-      restart_button.style.display = "block";
+      win.style.display='block';
+      restart_button.style.display = 'block';
 
       localStorage.setItem('moves_count', moves.textContent);
       const lowest_score = localStorage.getItem('lowest-score');
@@ -152,9 +153,5 @@ start_button.addEventListener("click", () => {
 });
 
 restart_button.addEventListener("click", () => {
-  start_button.style.display = "none";
-  restart_button.style.display = "none";
-  moves.textContent = 0;
-  game_container.textContent = "";
-  createDivsForColors(shuffledColors);
+  window.location.reload();
 });
