@@ -39,6 +39,7 @@ button {
   border-radius: 2rem;
   color: white !important;
   padding: 0.5rem 0.5rem;
+  width: 8rem;
   text-align: center;
 }
 
@@ -68,6 +69,22 @@ button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.button-box {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+}
+
+.change-level {
+  display: none;
+}
+
+.moves h3 {
+  display: none;
+}
+.score-display h3 {
+  display: none;
+}
 @media screen and (max-width: 768px) {
 
   .game {

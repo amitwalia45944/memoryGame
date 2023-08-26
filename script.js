@@ -1,13 +1,24 @@
 const game_container = document.getElementById("game");
 const start_button = document.getElementById("start-button");
 const restart_button = document.getElementById("restart-button");
+const medium_button = document.getElementById("medium-button");
+const hard_button = document.getElementById("hard-button");
 const score_display = document.getElementById("score-display");
 const moves = document.getElementById('moves');
+const moves_display = document.querySelector('.moves h3');
 const win = document.querySelector('#win');
+const s_display = document.querySelector('.score-display h3');
 
 let previous_card = '';
 let matched_card_count = 0;
 let cards_open = 0;
+let winner_match_number_to_be_compare;
+
+let object = {
+  "small": false,
+  "medium": false,
+  "hard": false
+};
 
 game_container.addEventListener('click', (event) => {
   if (event.target.classList.contains('matched') === false && event.target.classList.contains('card') && cards_open < 2) {
@@ -57,7 +68,11 @@ const COLORS = [
   "gifs/3.gif",
   "gifs/4.gif",
   "gifs/5.gif",
-  "gifs/6.gif"
+  "gifs/6.gif",
+  "gifs/7.gif",
+  "gifs/8.gif",
+  "gifs/9.gif",
+  "gifs/10.gif",
 ];
 
 function to_initial_position(current_card) {
@@ -86,25 +101,58 @@ function check_for_match(previous_card, current_card) {
     previous_card.children[0].style.display = 'block';
 
     matched_card_count += 1;
-    console.log(matched_card_count);
 
-    if (matched_card_count === COLORS.length) {
+    if (object.small) {
+      winner_match_number_to_be_compare = 2;
+    } else if (object.medium) {
+      winner_match_number_to_be_compare = 4;
+    } else {
+      winner_match_number_to_be_compare = 6;
+    }
+
+    if (matched_card_count === winner_match_number_to_be_compare) {
 
       win.style.display = 'block';
       restart_button.style.display = 'block';
 
       localStorage.setItem('moves_count', moves.textContent);
 
-      const lowest_score = localStorage.getItem('lowest-score');
+      if (winner_match_number_to_be_compare === 2) {
+        const lowest_score_small = localStorage.getItem('lowest-score-small');
 
-      if (lowest_score === null || parseInt(moves.textContent) < parseInt(lowest_score)) {
-        localStorage.setItem('lowest-score', moves.textContent);
+        if (lowest_score_small === null || parseInt(moves.textContent) < parseInt(lowest_score_small)) {
+          localStorage.setItem('lowest-score-small', moves.textContent);
+        }
+
+        if (lowest_score_small !== null) {
+          // console.log(lowest_score);
+          score_display.textContent = lowest_score_small;
+        }
+
+      } else if (winner_match_number_to_be_compare === 4) {
+        const lowest_score_medium = localStorage.getItem('lowest-score-medium');
+
+        if (lowest_score_medium === null || parseInt(moves.textContent) < parseInt(lowest_score_medium)) {
+          localStorage.setItem('lowest-score-medium', moves.textContent);
+        }
+
+        if (lowest_score_medium !== null) {
+          // console.log(lowest_score);
+          score_display.textContent = lowest_score_medium;
+        }
+      } else {
+        const lowest_score_hard = localStorage.getItem('lowest-score-hard');
+
+        if (lowest_score_hard === null || parseInt(moves.textContent) < parseInt(lowest_score_hard)) {
+          localStorage.setItem('lowest-score-hard', moves.textContent);
+        }
+
+        if (lowest_score_hard !== null) {
+          // console.log(lowest_score);
+          score_display.textContent = lowest_score_hard;
+        }
       }
 
-      if (lowest_score !== null) {
-        console.log(lowest_score);
-        score_display.textContent = lowest_score;
-      }
     }
     return true;
   }
@@ -136,45 +184,145 @@ function shuffle(array) {
 function createDivsForColors(colorArray) {
   game_container.innerText = "";
 
-  for (let index = 0; index < colorArray.length; index++) {
+  colorArray.forEach((color, index) => {
     const newDiv = document.createElement("div");
-    newDiv.classList.add("card", index, colorArray[index]);
+    newDiv.classList.add("card", index, color);
+
     const img = document.createElement("img");
-    img.src = colorArray[index];
+    img.src = color;
+
     newDiv.appendChild(img);
     game_container.append(newDiv);
-  }
+  });
 }
 
 start_button.addEventListener("click", () => {
- 
-  const lowest_score = localStorage.getItem('lowest-score');
- 
-  if (lowest_score !== null) {
-     score_display.textContent = lowest_score;
-   }
+  object.small = true;
+  moves_display.style.display = "block";
+  s_display.style.display = "block";
 
-  let shuffledColors = shuffle(COLORS.concat(COLORS));
-  console.log(shuffledColors);
+  const lowest_score_small = localStorage.getItem('lowest-score-small');
+
+  if (lowest_score_small !== null) {
+    score_display.textContent = lowest_score_small;
+  }
+   
+  let easy_game = [];
+
+  for (let index = 0; index < 2; index++) {
+    easy_game.push(COLORS[index]);
+  }
+
+  let shuffledColors = shuffle(easy_game.concat(easy_game));
 
   start_button.style.display = "none";
+  medium_button.style.display = "none";
+  hard_button.style.display = "none";
   restart_button.style.display = "none";
+  
+
+  createDivsForColors(shuffledColors);
+
+});
+
+medium_button.addEventListener("click", () => {
+  
+  object.medium = true;
+  moves_display.style.display = "block";
+  s_display.style.display = "block";
+  const lowest_score_medium = localStorage.getItem('lowest-score-medium');
+
+  if (lowest_score_medium !== null) {
+    score_display.textContent = lowest_score_medium;
+  }
+
+  let medium_game = [];
+
+  for (let index = 0; index < 4; index++) {
+    medium_game.push(COLORS[index]);
+  }
+
+  let shuffledColors = shuffle(medium_game.concat(medium_game));
+
+  start_button.style.display = "none";
+  medium_button.style.display = "none";
+  hard_button.style.display = "none";
+  restart_button.style.display = "none";
+
+  createDivsForColors(shuffledColors);
+});
+
+
+hard_button.addEventListener("click", () => {
+  object.hard = true;
+  s_display.style.display = "block";
+  moves_display.style.display = "block";
+  const lowest_score_hard = localStorage.getItem('lowest-score-hard');
+
+  if (lowest_score_hard !== null) {
+    score_display.textContent = lowest_score_hard;
+  }
+
+  let hard_game = [];
+
+  for (let index = 0; index < 6; index++) {
+    hard_game.push(COLORS[index]);
+  }
+
+  let shuffledColors = shuffle(hard_game.concat(hard_game));
+
+  start_button.style.display = "none";
+  medium_button.style.display = "none";
+  hard_button.style.display = "none";
+  restart_button.style.display = "none";
+
   createDivsForColors(shuffledColors);
 });
 
 restart_button.addEventListener("click", () => {
-  const lowest_score = localStorage.getItem('lowest-score');
- 
-  if (lowest_score !== null) {
-     console.log(lowest_score);
-     score_display.textContent = lowest_score;
-   }
 
-  let shuffledColors = shuffle(COLORS.concat(COLORS));
-  console.log(shuffledColors);
+  let value;
+
+  const lowest_score_small = localStorage.getItem('lowest-score-small');
+  const lowest_score_medium = localStorage.getItem('lowest-score-medium');
+  const lowest_score_hard = localStorage.getItem('lowest-score-hard');
+
+  Object.keys(object).filter((level) => {
+    if (object[level] === true) {
+      if (level === 'small') {
+        value = 2;
+        if (lowest_score_small !== null) {
+          score_display.textContent = lowest_score_small;
+        }
+      } else if (level === 'medium') {
+        value = 4;
+        if (lowest_score_medium !== null) {
+          score_display.textContent = lowest_score_medium;
+        }
+      } else {
+        value = 6;
+        if (lowest_score_hard !== null) {
+          score_display.textContent = lowest_score_hard;
+        }
+      }
+    }
+  });
+
+  let restart_game = [];
+
+  for (let index = 0; index < value; index++) {
+    restart_game.push(COLORS[index]);
+
+  }
+
+  console.log(restart_game);
+
+  let shuffledColors = shuffle(restart_game.concat(restart_game));
+
   moves.textContent = 0;
   matched_card_count = 0;
   win.style.display = "none";
+
   createDivsForColors(shuffledColors);
-  
+
 });
