@@ -85,23 +85,24 @@ function check_for_match(previous_card, current_card) {
     previous_card.children[0].classList.add('rotate');
     previous_card.children[0].style.display = 'block';
 
-
     matched_card_count += 1;
+    console.log(matched_card_count);
 
-    if (matched_card_count === 6) {
+    if (matched_card_count === COLORS.length) {
 
-      win.style.display='block';
+      win.style.display = 'block';
       restart_button.style.display = 'block';
 
       localStorage.setItem('moves_count', moves.textContent);
-      const lowest_score = localStorage.getItem('lowest-score');
 
+      const lowest_score = localStorage.getItem('lowest-score');
 
       if (lowest_score === null || parseInt(moves.textContent) < parseInt(lowest_score)) {
         localStorage.setItem('lowest-score', moves.textContent);
       }
 
       if (lowest_score !== null) {
+        console.log(lowest_score);
         score_display.textContent = lowest_score;
       }
     }
@@ -132,9 +133,8 @@ function shuffle(array) {
   return array;
 }
 
-let shuffledColors = shuffle(COLORS.concat(COLORS));
-
 function createDivsForColors(colorArray) {
+  game_container.innerText = "";
 
   for (let index = 0; index < colorArray.length; index++) {
     const newDiv = document.createElement("div");
@@ -147,11 +147,34 @@ function createDivsForColors(colorArray) {
 }
 
 start_button.addEventListener("click", () => {
+ 
+  const lowest_score = localStorage.getItem('lowest-score');
+ 
+  if (lowest_score !== null) {
+     score_display.textContent = lowest_score;
+   }
+
+  let shuffledColors = shuffle(COLORS.concat(COLORS));
+  console.log(shuffledColors);
+
   start_button.style.display = "none";
   restart_button.style.display = "none";
   createDivsForColors(shuffledColors);
 });
 
 restart_button.addEventListener("click", () => {
-  window.location.reload();
+  const lowest_score = localStorage.getItem('lowest-score');
+ 
+  if (lowest_score !== null) {
+     console.log(lowest_score);
+     score_display.textContent = lowest_score;
+   }
+
+  let shuffledColors = shuffle(COLORS.concat(COLORS));
+  console.log(shuffledColors);
+  moves.textContent = 0;
+  matched_card_count = 0;
+  win.style.display = "none";
+  createDivsForColors(shuffledColors);
+  
 });
