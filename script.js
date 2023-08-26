@@ -198,6 +198,7 @@ function createDivsForColors(colorArray) {
 
 start_button.addEventListener("click", () => {
   object.small = true;
+  change_level_button.style.display = "block";
   moves_display.style.display = "block";
   s_display.style.display = "block";
 
@@ -206,7 +207,7 @@ start_button.addEventListener("click", () => {
   if (lowest_score_small !== null) {
     score_display.textContent = lowest_score_small;
   }
-   
+
   let easy_game = [];
 
   for (let index = 0; index < 2; index++) {
@@ -219,15 +220,16 @@ start_button.addEventListener("click", () => {
   medium_button.style.display = "none";
   hard_button.style.display = "none";
   restart_button.style.display = "none";
-  
+
 
   createDivsForColors(shuffledColors);
 
 });
 
 medium_button.addEventListener("click", () => {
-  
+
   object.medium = true;
+  change_level_button.style.display = "block";
   moves_display.style.display = "block";
   s_display.style.display = "block";
   const lowest_score_medium = localStorage.getItem('lowest-score-medium');
@@ -255,6 +257,7 @@ medium_button.addEventListener("click", () => {
 
 hard_button.addEventListener("click", () => {
   object.hard = true;
+  change_level_button.style.display = "block";
   s_display.style.display = "block";
   moves_display.style.display = "block";
   const lowest_score_hard = localStorage.getItem('lowest-score-hard');
@@ -322,7 +325,32 @@ restart_button.addEventListener("click", () => {
   moves.textContent = 0;
   matched_card_count = 0;
   win.style.display = "none";
+  restart_button.style.display = "none";
 
   createDivsForColors(shuffledColors);
 
 });
+
+const change_level_button = document.getElementById("change-level");
+
+change_level_button.addEventListener("click", () => {
+
+  start_button.style.display = "block";
+  medium_button.style.display = "block";
+  hard_button.style.display = "block";
+  restart_button.style.display = "none";
+  change_level_button.style.display = "none";
+  win.style.display = "none";
+  moves_display.style.display = "none";
+  s_display.style.display = "none";
+  moves.textContent = 0;
+  matched_card_count = 0;
+  previous_card = "";
+  cards_open = 0;
+  object.small = false;
+  object.medium = false;
+  object.hard = false;
+  
+  game_container.textContent = ""; 
+});
+
